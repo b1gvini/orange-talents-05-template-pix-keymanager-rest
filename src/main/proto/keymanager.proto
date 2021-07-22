@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "br.com.zup.b1gvini";
+option java_outer_classname = "Keymanager";
+option objc_class_prefix = "HLW";
+
+package br.com.zup.b1gvini;
+import "google/protobuf/timestamp.proto";
+
+service RegistraGrpcService {
+  rpc registra (RegistraPixRequest) returns (RegistraPixResponse) {}
+}
+
+service RemoveGrpcService {
+  rpc remove (RemovePixRequest) returns (RemovePixResponse){}
+}
+
+service CarregaGrpcService{
+  rpc carrega(CarregaPixRequest) returns (CarregaPixResponse){}
+}
+
+service ListaGrpcService{
+  rpc lista(ListaPixRequest) returns (ListaPixResponse){}
+}
+
+enum TipoChave{
+  CHAVE_DESCONHECIDA = 0;
+  CPF = 1;
+  TELEFONE = 2;
+  EMAIL = 3;
+  ALEATORIA = 4;
+}
+
+enum TipoConta{
+  CONTA_DESCONHECIDA = 0;
+  CONTA_CORRENTE = 1;
+  CONTA_POUPANCA = 2;
+}
+
+message RegistraPixRequest {
+  string clientId = 1;
+  TipoChave tipoChave = 2;
+  string valorChave = 3;
+  TipoConta tipoConta = 4;
+}
+
+message RegistraPixResponse {
+  string clientId = 1;
+  string PixId = 2;
+}
+
+message RemovePixRequest{
+  string pixId = 1;
+  string clientId = 2;
+}
+
+message RemovePixResponse{
+  string resposta = 1;
+}
+
+message CarregaPixRequest{
+  message FiltroPorPixId{
+    string clientId = 1;
+    string pixId = 2;
+  }
+
+  oneof filtro{
+    FiltroPorPixId pixId = 1;
+    string chave = 2;
+  }
+}
+
+message CarregaPixResponse{
+  message ChavePix{
+    message ContaInfo{
+      TipoConta tipo = 1;
+      string instituicao = 2;
+      string titularNome = 3;
+      string titularCpf = 4;
+      string agencia = 5;
+      string numeroConta = 6;
+    }
+
+    TipoChave tipo = 1;
+    string chave = 2;
+    ContaInfo conta = 3;
+    google.protobuf.Timestamp criadaEm = 4;
+  }
+
+  string clientId = 1;
+  string pixId     = 2;
+  ChavePix chave   = 3;
+}
+
+message ListaPixRequest{
+  string clientId = 1;
+}
+
+message ListaPixResponse{
+
+  message ChavePix{
+    string pixId = 1;
+    TipoChave tipoChave = 2;
+    string chave = 3;
+    TipoConta tipoConta =4;
+    google.protobuf.Timestamp criadaEm= 5;
+  }
+
+  string clientId = 1;
+  repeated ChavePix chaves = 2;
+}
