@@ -28,7 +28,7 @@ class GlobalExceptionHandler: ExceptionHandler<StatusRuntimeException, HttpRespo
             Status.INTERNAL.code -> Pair(HttpStatus.BAD_REQUEST, "Problemas com o nosso servidor")
             else -> {
                 logger.error("ERRO INESPERADO", exception)
-                Pair(HttpStatus.INTERNAL_SERVER_ERROR, "Nao foi possível completar requisiçao")
+                Pair(HttpStatus.BAD_REQUEST, "Nao foi possível completar requisiçao")
             }
         }
 
